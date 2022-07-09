@@ -1,0 +1,98 @@
+#include<iostream>
+#include<string.h>
+#include<cstdlib>
+using namespace std;
+
+
+class llist{
+private:
+    typedef struct node{
+        int data;
+        struct node* next;
+    }* nodeptr;
+    nodeptr head;
+    nodeptr curr;
+    nodeptr temp;
+    public:   //all functions accessing the private data help operate the list
+        llist();  //constructor function
+        void AddNode(int addData);
+        void DelNodeBeg();
+        void DelNodeEnd();
+        void PrintList();
+};
+
+llist::llist(){
+    head = NULL;
+    curr = NULL;
+    temp = NULL;
+}
+
+void llist::AddNode(int addData){
+     nodeptr nn=new node;
+     nn->next=NULL;
+     nn->data=addData;
+
+     if(head!=NULL)
+     {
+         curr = head;
+         while(curr->next != NULL)
+         {
+             curr = curr->next;
+         }
+         curr->next=nn;
+     }
+     else
+     {
+         head=nn;
+     }
+}
+
+void llist::DelNodeBeg(){
+    curr=head;
+    if(curr!=NULL)
+    {
+        head=curr->next;
+        delete curr;
+    }
+
+}
+
+void llist::DelNodeEnd(){
+    temp=head;
+    curr=head;
+    while(curr->next!=NULL)
+    {
+        temp=curr;
+        curr=curr->next;
+    }
+    temp->next=NULL;
+    delete curr;
+}
+
+
+void llist::PrintList(){
+    curr=head;
+    while(curr!=NULL)
+    {
+        cout<<curr->data<<endl;
+        curr=curr->next;
+    }
+    cout<<endl;
+}
+
+
+int main()
+{
+    int n,t,i;
+    llist Ll1;
+    cin>>t;
+    for(i=0;i<t;i++)
+    {
+        cin>>n;
+        Ll1.AddNode(n);
+    }
+    Ll1.DelNodeBeg();
+    Ll1.DelNodeEnd();
+    Ll1.PrintList();
+    return 0;
+}
