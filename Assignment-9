@@ -1,0 +1,127 @@
+//Priority Queue
+#include<iostream>
+using namespace std;
+
+struct node
+{
+    int time;
+    int job;
+    struct node*link;
+};
+
+
+class priority_queue
+{
+
+public:
+    node*front;
+    priority_queue()
+    {
+        front=NULL;
+    }
+
+
+    void insert(int item,int time)
+    {
+        node*tmp,*q;
+        tmp=new node;
+        tmp->job=item;
+        tmp->time=time;
+        if (front==NULL || time<front->time)
+        {
+            tmp->link=front;
+            front=tmp;
+        }
+        else
+        {
+            q=front;
+            while(q->link!=NULL && q->link->time<=time)
+            {
+                q=q->link;
+                tmp->link=q->link;
+                q->link=tmp;
+            }
+        }
+    }
+
+    void del()
+    {
+        node *tmp;
+        if(front==NULL)
+            cout<<"Queue Underflow\n";
+        else
+        {
+            tmp=front;
+            cout<<"Deleted item is: "<<tmp->job<<endl;
+            front=front->link;
+            free(tmp);
+        }
+    }
+
+    void display()
+    {
+        node*ptr;
+        ptr=front;
+        if(front==NULL)
+            cout<<"Queue is empty\n";
+        else
+        {
+            cout<<"Queue is:\n";
+            cout<<"Time Job: \n";
+            while(ptr!=NULL)
+            {
+                cout<<ptr->time<<" "<<ptr->job<<endl;
+                ptr = ptr->link;
+            }
+        }
+    }
+
+};
+
+
+
+int main()
+{
+    int ch,itm,priority;
+    priority_queue obj;
+    do
+    {
+        cout<<"1.Insert value in Priority Queue\n";
+        cout<<"2.Delete value from Priority Queue\n";
+        cout<<"3.Display the Priority Queue\n";
+        cout<<"4.Exit"<<endl;
+        cout<<"Enter your choice: ";
+        cin>>ch;
+        cout<<endl;
+        switch(ch)
+        {
+        case 1:
+            {
+                cout<<"Input the job value to be added in the queue: ";
+                cin>>itm;
+                cout<<"Enter its time value: ";
+                cin>>priority;
+                obj.insert(itm,priority);
+                cout<<endl;
+                break;
+            }
+        case 2:
+            {
+                obj.del();
+                cout<<endl;
+                break;
+            }
+        case 3:
+            {
+                obj.display();
+                cout<<endl;
+                break;
+            }
+        case 4:
+            break;
+        default:
+            cout<<"Invalid Input"<<endl;
+        }
+    }while(ch!=4);
+    return 0;
+}
