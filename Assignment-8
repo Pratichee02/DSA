@@ -1,0 +1,168 @@
+//Expression Conversion and Evaluation
+#include <iostream>
+
+using namespace std;
+
+class stacks
+{
+    char exp[20];
+    int top = -1;
+    char st[20];
+    public:
+    void push(char val)
+    {
+        top++;
+        st[top] = val;
+    }
+    char pop()
+    {
+        char c = st[top];
+        top--;
+        return c;
+    }
+    int precedence(char c)
+    {
+        if (c == '(')
+        return 0;
+        if (c == '+' || c == '-')
+        return 1;
+        if (c == '*' || c == '/')
+        return 2;
+        if (c == '^')
+        return 3;
+    }
+    void infpost()
+    {
+        int i,k = 0;
+        char post[20];
+        cout<<"Enter the Expression : ";
+        cin>>exp;
+        for (i = 0;exp[i] != '\0';i++)
+        {
+            if (isalpha(exp[i]) || isdigit(exp[i]))
+            {
+                post[k] = exp[i];
+                k++;
+            }
+            else if(exp[i] == '(')
+            {
+                push('(');
+            }
+            else if(exp[i] == ')')
+            {
+                char ch;
+                while((ch == pop()) != '(')
+                {
+                    post[k] = ch;
+                    k++;
+                }
+            }
+            else
+            {
+                while(precedence(st[top]) >= precedence(exp[i]))
+                {
+                    post[k] = pop();
+                    k++;
+                }
+                push(exp[i]);
+            }
+            
+        }
+        while(top >= 0)
+        {
+            post[k] = pop();
+            k++;
+        }
+        post[k] = '\0';
+        cout<<"Postfix Form is : "<<post<<endl;
+    }
+};
+
+class Evaluation
+{
+    public:
+    int st[50];
+    int top;
+    char str[50];
+    Evaluation()
+    {
+        top = -1;
+    }
+    void push(int item)
+    {
+        top++;
+        st[top] = item;
+    }
+    int pop()
+    {
+        int item = st[top];
+        top--;
+    }
+    int operation(int a,int b, char opr)
+    {
+        switch(opr)
+        {
+            case '+':
+            return a+b;
+            case '-':
+            return a-b;
+            case '*':
+            return a*b;
+            case '/':
+            return a/b;
+            default:
+            return 0;
+        }
+    }
+    int calculatePostfix()
+    {
+        int index = 0;
+        while(str[index] != '\0')
+        {
+            if(isdigit(str[index]))
+            {
+                push(str[index]);
+            }
+            else
+            {
+                int x = pop();
+                int y = pop();
+                int result = operation(x,y,str[index]);
+                push(result);
+            }
+            index++;
+        }
+        return pop();
+    }
+};
+
+int main()
+{
+  int choice,ch = 1,result;
+  stacks obj;
+  Evaluation eval;
+  while(ch == 1)
+  {
+      cout<<"1. Convert Infix to Postfix expression"<<endl;
+      cout<<"2. Evaluate Postfix Expression"<<endl;
+      cout<<"Enter Your Choice : ";
+      cin>>choice;
+      switch(choice)
+      {
+          case 1:
+          obj.infpost();
+          break;
+          case 2:
+          cout<<"Enter the Postfix Expression";
+          cin>>eval.str;
+          result = eval.calculatePostfix();
+          cout<<"The Result is : "<<result<<endl;
+          break;
+          default:
+          cout<<"Invalid Input"<<endl;
+      }
+      cout<<"Do you Want to Continue (1/0) : ";
+      cin >> ch;
+  }
+   return 0;
+}
